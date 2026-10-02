@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OmniData Studio | Enterprise Statistical & Predictive Analytics</title>
+  
+  <!-- PWA & SEO Meta -->
+  <meta name="description" content="Production-grade Statistical Profiling, OLS Regression, Correlation Heatmaps, and Anomaly Detection Workstation">
+  <meta name="theme-color" content="#10b981">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23030605'/><circle cx='50' cy='50' r='30' fill='none' stroke='%2310b981' stroke-width='6'/><polyline points='30,60 45,35 60,50 75,25' fill='none' stroke='%2322d3ee' stroke-width='6'/></svg>">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Hidden File Input for Custom CSV Drag & Drop Upload -->
+  <input type="file" id="csv-file-input" accept=".csv,.txt" style="display: none;">
+
+  <!-- Outer Application Shell -->
+  <div class="window-shell">
+
+    <!-- Top Window Title & Controls Bar -->
+    <header class="window-header">
+      <div class="brand-group">
+        <span class="brand-icon">⚡</span>
+        <span class="brand-title">OMNIDATA // INTELLIGENCE STUDIO</span>
+        <span class="version-tag">v3.5 PRO</span>
+      </div>
+
+      <!-- Dataset Selector Dropdown -->
+      <div class="dataset-control">
+        <label for="dataset-select">Active Corpus:</label>
+        <select id="dataset-select" class="cyber-select">
+          <option value="fintech-credit">FinTech Credit Risk (1,000 Obs)</option>
+          <option value="saas-retention">SaaS Churn & Valuation (800 Obs)</option>
+          <option value="supply-chain">Supply Chain Logistics (650 Obs)</option>
+          <option value="custom" disabled>Custom Uploaded Dataset</option>
+        </select>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="header-actions">
+        <button class="action-btn upload-btn" id="btn-upload-csv" title="Upload Custom CSV File">📥 Ingest CSV</button>
+        <button class="action-btn" id="btn-export-report" title="Export Executive Analytical Report">📄 Export Report</button>
+        <button class="action-btn" id="btn-sound-toggle" title="UI Audio Synthesizer">🔊</button>
+        <button class="action-btn" id="btn-refresh-run" title="Recalculate Models">⟲ Run</button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Body: 3-Column High-Density Workstation -->
+    <div class="workspace-body">
+
+      <!-- ========================================================
+           1. Left Column: Data Profiler & Statistical Moments Table
+           ======================================================== -->
+      <aside class="left-pane">
+        <div class="pane-header">
+          <span class="header-tag">SCHEMA & MOMENTS</span>
+          <span class="stat-count" id="row-count-badge">1,000 Rows</span>
+        </div>
+
+        <!-- Dimension Selector -->
+        <div class="control-box">
+          <label for="primary-dim-select">Target Metric (Histogram):</label>
+          <select id="primary-dim-select" class="cyber-select"></select>
+        </div>
+
+        <!-- Descriptive Moments Card -->
+        <div class="card moments-card">
+          <div class="card-header">DESCRIPTIVE MOMENTS // PROFILING</div>
+          <div class="moments-grid" id="moments-container">
+            <!-- Injected by app.js -->
+          </div>
+        </div>
+
+        <!-- Raw Schema & Types List -->
+        <div class="card schema-card">
+          <div class="card-header">DATASET ATTRIBUTES & NULLS</div>
+          <div class="schema-list" id="schema-list">
+            <!-- Injected by app.js -->
+          </div>
+        </div>
+      </aside>
+
+      <!-- ========================================================
+           2. Center Column: KPI Ribbons & Interactive Charting Suite
+           ======================================================== -->
+      <main class="center-pane">
+        <!-- 4 Top KPI Metric Cards -->
+        <div class="kpi-ribbon">
+          <div class="kpi-card">
+            <span class="kpi-label">TOTAL OBSERVATIONS</span>
+            <h2 class="kpi-value cyan" id="kpi-rows">1,000</h2>
+            <span class="kpi-meta">Ingested & Cleaned</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">REGRESSION R² FIT</span>
+            <h2 class="kpi-value green" id="kpi-r2">0.912</h2>
+            <span class="kpi-meta">Predictive Confidence</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">MAX CORRELATION (r)</span>
+            <h2 class="kpi-value amber" id="kpi-corr">+0.841</h2>
+            <span class="kpi-meta">Pearson Coefficient</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">TUKEY ANOMALIES</span>
+            <h2 class="kpi-value red" id="kpi-anomalies">24</h2>
+            <span class="kpi-meta">Statistical Outliers</span>
+          </div>
+        </div>
+
+        <!-- Chart Container with Tab Switcher -->
+        <div class="chart-wrapper">
+          <div class="chart-toolbar">
+            <div class="chart-tabs">
+              <button class="chart-tab active" data-chart="histogram">Distribution &amp; KDE</button>
+              <button class="chart-tab" data-chart="scatter">OLS Regression &amp; Scatter</button>
+              <button class="chart-tab" data-chart="heatmap">Correlation Matrix Heatmap</button>
+            </div>
+
+            <!-- Dynamic regression axis controls (shown on scatter tab) -->
+            <div class="scatter-controls" id="scatter-controls" style="display: none;">
+              <span>X:</span>
+              <select id="scatter-x-select" class="cyber-select micro"></select>
+              <span>Y:</span>
+              <select id="scatter-y-select" class="cyber-select micro"></select>
+            </div>
+          </div>
+
+          <!-- Canvas Viewport -->
+          <div class="canvas-viewport" id="canvas-viewport">
+            <canvas id="main-analytics-canvas" width="850" height="420"></canvas>
+          </div>
+        </div>
+      </main>
+
+      <!-- ========================================================
+           3. Right Column: Executive Insights, OLS Model & Anomalies
+           ======================================================== -->
+      <aside class="right-pane">
+        <div class="pane-header">
+          <span class="header-tag">INFERENCE & ANOMALIES</span>
+          <span class="stat-count live">● Engine Online</span>
+        </div>
+
+        <!-- Automated Executive Insights (NLG) -->
+        <div class="card insights-card">
+          <div class="card-header">AUTOMATED STATISTICAL INSIGHTS</div>
+          <div class="insights-body" id="insights-body">
+            <!-- Injected by app.js -->
+          </div>
+        </div>
+
+        <!-- OLS Model Diagnostics Card -->
+        <div class="card regression-card">
+          <div class="card-header">PREDICTIVE OLS PARAMETERS</div>
+          <div class="reg-body" id="reg-parameters">
+            <!-- Injected by app.js -->
+          </div>
+        </div>
+
+        <!-- Outlier Inspection Log -->
+        <div class="card anomaly-card">
+          <div class="card-header">OUTLIER AUDIT (TUKEY &amp; Z-SCORE)</div>
+          <div class="anomaly-list" id="anomaly-list">
+            <!-- Injected by app.js -->
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Status Bar Footer -->
+    <footer class="window-footer">
+      <div class="footer-left">
+        <span class="status-dot"></span>
+        <span>Connected: Statistical Core (Float64 Math)</span>
+      </div>
+      <div class="footer-right">
+        <span>Architect: أ. طارق ابوعشي</span>
+        <span class="sep">|</span>
+        <span>Tareq0001 // Production Analytics</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="analytics-engine.js"></script>
+  <script src="chart-renderer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
